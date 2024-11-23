@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  db:
+    image: 'postgres:latest'
+    container_name: 'dac_db'
+    restart: 'always'
+    environment:
+      - 'POSTGRES_DB=dac'
+      - 'POSTGRES_PASSWORD=dac'
+      - 'POSTGRES_USER=postgres'
+    ports:
+      - '5432:5432'
+    expose:
+      - 5432
+    networks:
+      - dac_network
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: 'dac_app'
+    ports:
+      - '8080:8080'
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/dac
+      - SPRING_DATASOURCE_USERNAME=dac
+      - SPRING_DATASOURCE_PASSWORD=dac
+    depends_on:
+      - db
+    restart: 'always'
+    networks:
+      - dac_network
+
+volumes:
+  pgdata:
+
+networks:
+  dac_network:
+    driver: bridge
