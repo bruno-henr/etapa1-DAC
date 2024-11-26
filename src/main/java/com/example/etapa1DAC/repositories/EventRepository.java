@@ -3,17 +3,14 @@ package com.example.etapa1DAC.repositories;
 import com.example.etapa1DAC.DTO.EventWithDatesDTO;
 import com.example.etapa1DAC.Event;
 import com.example.etapa1DAC.Utils;
-import jakarta.persistence.Tuple;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-
-
+@Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
     @Query(
             value = "SELECT e.id AS eventId, " +
@@ -32,12 +29,13 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     )
     List<Object[]> queryFindEventsAndDatesByLocation(@Param("location") String location);
 
-
     default EventWithDatesDTO findEventsAndDatesByLocation(String location) {
         List<Object[]> results = this.queryFindEventsAndDatesByLocation(location);
+
         if (results.isEmpty()) {
-            return null; // ou lançar uma exceção
+            return new EventWithDatesDTO();
         }
+
         Object[] tuple = results.get(0);
         return Utils.mapObjectArrayToEventWithDatesDTO(tuple);
     }

@@ -45,6 +45,9 @@ public class Event {
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Ticket> tickets = new HashSet<>();
 
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<TicketType> ticketTypes = new HashSet<>();
+
     public Event(String name, String description, String location, Integer capacity, Double price) {
         this.name = name;
         this.description = description;
