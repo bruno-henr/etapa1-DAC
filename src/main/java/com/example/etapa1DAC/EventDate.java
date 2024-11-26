@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Table(name = "eventDate")
+@Table(name = "event_date")
 public class EventDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,8 +26,14 @@ public class EventDate {
     private Event event;
 
     @Column(nullable = false)
-    private LocalDateTime startTime;
+    private LocalDateTime start_time;
 
     @Column(nullable = false)
-    private LocalDateTime endTime;
+    private LocalDateTime end_time;
+
+    public EventDate(Event event, LocalDateTime startTime, LocalDateTime endTime) {
+        this.event = event;
+        this.start_time = startTime;
+        this.end_time = endTime;
+    }
 }

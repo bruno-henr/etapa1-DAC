@@ -5,7 +5,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -37,9 +38,18 @@ public class Event {
     @Column(nullable = false)
     private Double price;
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
-    private List<EventDate> eventDates;
+//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<EventDate> eventDates = new HashSet<>();
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
-    private List<Ticket> tickets;
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Ticket> tickets = new HashSet<>();
+
+    public Event(String name, String description, String location, Integer capacity, Double price) {
+        this.name = name;
+        this.description = description;
+        this.location = location;
+        this.capacity = capacity;
+        this.price = price;
+    }
 }
