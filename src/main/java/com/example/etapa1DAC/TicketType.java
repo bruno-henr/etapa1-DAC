@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Getter
@@ -20,13 +21,19 @@ public class TicketType {
     @Column(nullable = false)
     private String name;
 
+
     @ElementCollection
     @CollectionTable(
             name = "ticket_type_required_fields",
             joinColumns = @JoinColumn(name = "ticket_type_id")
     )
-    @Column(name = "field_name")
-    private List<String> requiredFields;
+    @MapKeyColumn(name = "field_name")
+    @Column(name = "field_value", columnDefinition = "TEXT")
+    @Convert(converter = JsonConverter.class)
+    private Map<String, Object> requiredFields;
+    // A ideia de requiredFields é armazenar um Map,
+    // sendo a chave o nome do campo requerido e o value com as especificaçes do campo
+    // Ex: [ { CPF: { regex: '...', mask: '...', description: '...' } }, { ... } ]
 
     @Column(nullable = false)
     private Integer totalQuantity;
@@ -39,7 +46,7 @@ public class TicketType {
         this.name = name;
     }
 
-    public TicketType(String name, Integer totalQuantity, List<String> requiredFields) {
+    public TicketType(String name, Integer totalQuantity, Map<String, Object> requiredFields) {
         this.totalQuantity = totalQuantity;
         this.name = name;
         this.requiredFields = requiredFields;

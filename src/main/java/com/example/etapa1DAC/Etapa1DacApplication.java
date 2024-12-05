@@ -3,6 +3,7 @@ package com.example.etapa1DAC;
 import com.example.etapa1DAC.repositories.EventDateRepository;
 import com.example.etapa1DAC.repositories.EventRepository;
 import com.example.etapa1DAC.repositories.TicketRepository;
+import com.example.etapa1DAC.repositories.TicketTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -21,6 +22,9 @@ public class Etapa1DacApplication implements CommandLineRunner {
 
 	@Autowired
 	TicketRepository ticketRepository;
+
+	@Autowired
+	TicketTypeRepository ticketTypeRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Etapa1DacApplication.class, args);
@@ -52,11 +56,11 @@ public class Etapa1DacApplication implements CommandLineRunner {
 //		TicketMode t1 = new TicketMode("Estudante", List.of("MATRICULA", "CPF"));
 //		ticketModeRepository.save(t1);
 
-		Event event = eventRepository.findById(1L).orElseThrow(() -> new RuntimeException("Event not found"));;
+//		Event event = eventRepository.findById(1L).orElseThrow(() -> new RuntimeException("Event not found"));;
 //		TicketMode ticketMode = ticketModeRepository.findById(1L).orElseThrow(() -> new RuntimeException("TicketMode not found"));;
-		Map<String, String> requiredInfo = new HashMap<>();
-		requiredInfo.put("CPF", "123.456.789-00");
-		requiredInfo.put("MATRICULA", "2022222222");
+//		Map<String, String> requiredInfo = new HashMap<>();
+//		requiredInfo.put("CPF", "123.456.789-00");
+//		requiredInfo.put("MATRICULA", "2022222222");
 
 //		Ticket ticket = new Ticket(
 //				LocalDateTime.of(2024, 12, 1, 23, 59),
@@ -67,5 +71,19 @@ public class Etapa1DacApplication implements CommandLineRunner {
 //		);
 //
 //		ticketRepository.save(ticket);
+		Map<String, Object> requiredFields = new HashMap<>();
+		requiredFields.put("CPF", Map.of(
+				"regex", "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}",
+				"mask", "###.###.###-##",
+				"description", "CPF do comprador"
+		));
+
+		TicketType ticketType = new TicketType(
+				"VIP",
+				100,
+				requiredFields
+		);
+
+		ticketTypeRepository.save(ticketType);
 	}
 }
