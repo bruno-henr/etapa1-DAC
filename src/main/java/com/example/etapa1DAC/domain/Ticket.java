@@ -1,5 +1,6 @@
-package com.example.etapa1DAC;
+package com.example.etapa1DAC.domain;
 
+import com.example.etapa1DAC.domain.enums.Restriction;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

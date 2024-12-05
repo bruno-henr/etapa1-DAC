@@ -1,4 +1,4 @@
-package com.example.etapa1DAC;
+package com.example.etapa1DAC.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
