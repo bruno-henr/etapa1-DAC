@@ -3,6 +3,8 @@ package com.example.etapa1DAC;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -11,17 +13,20 @@ import lombok.*;
 @ToString
 @Table(name = "ticket_type")
 public class TicketType {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id", nullable = false)
-    private Event event;
-
     @Column(nullable = false)
-    private Restriction type; // Ex: "Idoso", "PCD", "Aluno"
+    private String name;
+
+    @ElementCollection
+    @CollectionTable(
+            name = "ticket_type_required_fields",
+            joinColumns = @JoinColumn(name = "ticket_type_id")
+    )
+    @Column(name = "field_name")
+    private List<String> requiredFields;
 
     @Column(nullable = false)
     private Integer totalQuantity;
@@ -29,20 +34,27 @@ public class TicketType {
     @Column(nullable = false)
     private Integer soldQuantity = 0;
 
-    public TicketType(Restriction type, Integer totalQuantity, Event event) {
-        this.type = type;
+    public TicketType(String name, Integer totalQuantity) {
         this.totalQuantity = totalQuantity;
-        this.event = event;
+        this.name = name;
     }
 
-    public boolean hasAvailableTickets() {
-        return totalQuantity > soldQuantity;
+    public TicketType(String name, Integer totalQuantity, List<String> requiredFields) {
+        this.totalQuantity = totalQuantity;
+        this.name = name;
+        this.requiredFields = requiredFields;
     }
 
-    public void sellTicket() {
-        if (!hasAvailableTickets()) {
-            throw new IllegalStateException("Sem tickets disponiveis para o tipo: " + type);
+    public boolean hasAvailableTickets(Integer quantity) {
+        return (this.soldQuantity + quantity) <= this.totalQuantity;
+    }
+
+    public void sellTicket(Integer quantity) {
+        if (!hasAvailableTickets(quantity)) {
+            throw new IllegalStateException(
+                    "Sem tickets disponiveis para o tipo: " + this.name
+            );
         }
-        soldQuantity++;
+        this.soldQuantity += quantity;
     }
 }
