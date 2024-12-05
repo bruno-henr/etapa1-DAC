@@ -1,8 +1,8 @@
-package com.example.etapa1DAC.repositories;
+package com.example.etapa1DAC.repository;
 
 import com.example.etapa1DAC.DTO.EventWithDatesDTO;
-import com.example.etapa1DAC.Event;
 import com.example.etapa1DAC.Utils;
+import com.example.etapa1DAC.domain.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

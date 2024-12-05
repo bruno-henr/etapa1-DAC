@@ -1,7 +1,7 @@
-package com.example.etapa1DAC.services;
+package com.example.etapa1DAC.service;
 
 import com.example.etapa1DAC.DTO.EventWithDatesDTO;
-import com.example.etapa1DAC.repositories.EventRepository;
+import com.example.etapa1DAC.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,10 +1,10 @@
 package com.example.etapa1DAC;
 
 import com.example.etapa1DAC.domain.TicketType;
-import com.example.etapa1DAC.repositories.EventDateRepository;
-import com.example.etapa1DAC.repositories.EventRepository;
-import com.example.etapa1DAC.repositories.TicketRepository;
-import com.example.etapa1DAC.repositories.TicketTypeRepository;
+import com.example.etapa1DAC.repository.EventDateRepository;
+import com.example.etapa1DAC.repository.EventRepository;
+import com.example.etapa1DAC.repository.TicketRepository;
+import com.example.etapa1DAC.repository.TicketTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
