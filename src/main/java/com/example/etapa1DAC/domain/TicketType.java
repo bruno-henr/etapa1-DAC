@@ -1,9 +1,9 @@
-package com.example.etapa1DAC;
+package com.example.etapa1DAC.domain;
 
+import com.example.etapa1DAC.JsonConverter;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 import java.util.Map;
 
 @Entity

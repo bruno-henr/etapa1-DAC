@@ -1,5 +1,6 @@
 package com.example.etapa1DAC;
 
+import com.example.etapa1DAC.domain.TicketType;
 import com.example.etapa1DAC.repositories.EventDateRepository;
 import com.example.etapa1DAC.repositories.EventRepository;
 import com.example.etapa1DAC.repositories.TicketRepository;
