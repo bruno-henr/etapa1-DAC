@@ -1,15 +1,14 @@
 package com.example.etapa1DAC;
 
-import com.example.etapa1DAC.domain.TicketType;
-import com.example.etapa1DAC.repository.EventDateRepository;
-import com.example.etapa1DAC.repository.EventRepository;
-import com.example.etapa1DAC.repository.TicketRepository;
-import com.example.etapa1DAC.repository.TicketTypeRepository;
+import com.example.etapa1DAC.DTO.EventWithDatesDTO;
+import com.example.etapa1DAC.domain.*;
+import com.example.etapa1DAC.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,64 +26,66 @@ public class Etapa1DacApplication implements CommandLineRunner {
 	@Autowired
 	TicketTypeRepository ticketTypeRepository;
 
+	@Autowired
+	UserRepository userRepository;
+
 	public static void main(String[] args) {
 		SpringApplication.run(Etapa1DacApplication.class, args);
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
-		// US1. Criação de evento
-//		Event event = new Event(
-//				"Linkin Park",
-//				"Show...",
-//				"SP",
-//				2,
-//				50.0
-//		);
-//
-//		eventRepository.save(event);
-//		EventWithDatesDTO eventFind = eventRepository.findEventsAndDatesByLocation("SP");
-//		System.out.println("Evento encontrado => "+eventFind);
-//		LocalDateTime now = LocalDateTime.now();
-//
-//		EventDate eventDate = new EventDate(
-//			event,
-//			LocalDateTime.parse("2024-12-22T00:00:00"),
-//			LocalDateTime.parse("2024-12-22T00:00:00")
-//		);
-//		System.out.println("Evento salvo: " + event);
-		System.out.println("");
-//		TicketMode t1 = new TicketMode("Estudante", List.of("MATRICULA", "CPF"));
-//		ticketModeRepository.save(t1);
+//		US1. Criação de evento
+		Event event = new Event(
+				"Linkin Park",
+				"Show...",
+				"SP",
+				"Show"
+		);
+		eventRepository.save(event);
 
-//		Event event = eventRepository.findById(1L).orElseThrow(() -> new RuntimeException("Event not found"));;
-//		TicketMode ticketMode = ticketModeRepository.findById(1L).orElseThrow(() -> new RuntimeException("TicketMode not found"));;
-//		Map<String, String> requiredInfo = new HashMap<>();
-//		requiredInfo.put("CPF", "123.456.789-00");
-//		requiredInfo.put("MATRICULA", "2022222222");
+		EventDate eventDate = new EventDate(
+			event,
+			LocalDateTime.parse("2024-12-22T00:00:00"),
+			LocalDateTime.parse("2024-12-22T00:00:00")
+		);
+		eventDateRepository.save(eventDate);
 
-//		Ticket ticket = new Ticket(
-//				LocalDateTime.of(2024, 12, 1, 23, 59),
-//				event,
-//				1,
-//				ticketMode,
-//				requiredInfo
-//		);
-//
-//		ticketRepository.save(ticket);
 		Map<String, Object> requiredFields = new HashMap<>();
 		requiredFields.put("CPF", Map.of(
 				"regex", "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}",
 				"mask", "###.###.###-##",
 				"description", "CPF do comprador"
 		));
-
 		TicketType ticketType = new TicketType(
 				"VIP",
 				100,
+				2.0d,
 				requiredFields
 		);
-
 		ticketTypeRepository.save(ticketType);
+
+		User user = new User(
+				"Ednaldo Pereira",
+				"ednaldo@email.com",
+				"123",
+				true
+		);
+		userRepository.save(user);
+
+		Map<String, String> requiredInfo = new HashMap<>();
+		requiredInfo.put("CPF", "123.456.789-00");
+		requiredInfo.put("MATRICULA", "2022222222");
+
+		Ticket ticket = new Ticket(
+				LocalDateTime.of(2024, 12, 1, 23, 59),
+				1,
+				event,
+				ticketType,
+				user,
+				requiredInfo
+		);
+//
+		ticketRepository.save(ticket);
 	}
 }
