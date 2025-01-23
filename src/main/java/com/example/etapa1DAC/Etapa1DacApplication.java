@@ -39,13 +39,13 @@ public class Etapa1DacApplication implements CommandLineRunner {
 		Event event = new Event(
 				"Linkin Park",
 				"Show...",
-				"SP",
 				"Show"
 		);
 		eventRepository.save(event);
 
 		EventDate eventDate = new EventDate(
 			event,
+			"SP",
 			LocalDateTime.parse("2024-12-22T00:00:00"),
 			LocalDateTime.parse("2024-12-22T00:00:00")
 		);
@@ -78,14 +78,13 @@ public class Etapa1DacApplication implements CommandLineRunner {
 		requiredInfo.put("MATRICULA", "2022222222");
 
 		Ticket ticket = new Ticket(
-				LocalDateTime.of(2024, 12, 1, 23, 59),
 				1,
 				event,
 				ticketType,
 				user,
+				2,
 				requiredInfo
 		);
-//
 		ticketRepository.save(ticket);
 	}
 }

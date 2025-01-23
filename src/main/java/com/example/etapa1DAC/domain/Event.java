@@ -29,9 +29,6 @@ public class Event {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @Column(nullable = false)
-    private String location;
-
     @Column
     private String category;
 
@@ -42,10 +39,9 @@ public class Event {
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Ticket> tickets = new HashSet<>();
 
-    public Event(String name, String description, String location, String category) {
+    public Event(String name, String description, String category) {
         this.name = name;
         this.description = description;
-        this.location = location;
         this.category = category;
     }
 }
