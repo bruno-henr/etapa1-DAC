@@ -1,5 +1,6 @@
 package com.example.etapa1DAC.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Check;
@@ -27,6 +28,7 @@ public class EventDate {
 
     @ManyToOne
     @JoinColumn(name = "event_id", nullable = false)
+    @JsonIgnore
     private Event event;
 
     @Column(nullable = false)
