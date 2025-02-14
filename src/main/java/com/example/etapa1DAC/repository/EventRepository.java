@@ -16,15 +16,13 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             value = "SELECT e.id AS eventId, " +
                     "e.name AS eventName, " +
                     "e.description AS eventDescription, " +
-                    "e.location AS eventLocation, " +
-                    "e.capacity AS eventCapacity, " +
-                    "e.price AS eventPrice, " +
+                    "ed.location AS eventLocation, " +
                     "ed.id AS eventDateId, " +
                     "ed.start_time AS startTime, " +
                     "ed.end_time AS endTime " +
                     "FROM event e " +
-                    "LEFT JOIN event_date ed ON e.id = ed.event_id " +
-                    "WHERE e.location = :location LIMIT 1",
+                    "INNER JOIN event_date ed ON e.id = ed.event_id " +
+                    "WHERE ed.location = :location LIMIT 1",
             nativeQuery = true
     )
     List<Object[]> queryFindEventsAndDatesByLocation(@Param("location") String location);

@@ -27,8 +27,6 @@ public class EventWithDatesDTO {
             String eventName,
             String eventDescription,
             String eventLocation,
-            Integer eventCapacity,
-            Double eventPrice,
             Long eventDateId,
             LocalDateTime startTime,
             LocalDateTime endTime
@@ -37,8 +35,6 @@ public class EventWithDatesDTO {
         this.eventName = eventName;
         this.eventDescription = eventDescription;
         this.eventLocation = eventLocation;
-        this.eventCapacity = eventCapacity;
-        this.eventPrice = eventPrice;
         this.eventDateId = eventDateId;
         this.startTime = startTime;
         this.endTime = endTime;

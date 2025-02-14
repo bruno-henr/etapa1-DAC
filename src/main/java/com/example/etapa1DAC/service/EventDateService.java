@@ -12,10 +12,8 @@ public class EventDateService {
 
     public EventDate createEventDate(EventDate eventDate) {
         try {
-            System.out.println("AOBAAAAAA");
             return eventDateRepository.save(eventDate);
         } catch (Exception e) {
-            System.out.println("DEU ERRO AO CRIAR EVENT DATE");
             throw new RuntimeException(e);
         }
 

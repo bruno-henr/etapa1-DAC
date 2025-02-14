@@ -4,6 +4,7 @@ import com.example.etapa1DAC.DTO.CreateEventDTO;
 import com.example.etapa1DAC.DTO.EventWithDatesDTO;
 import com.example.etapa1DAC.domain.Event;
 import com.example.etapa1DAC.domain.EventDate;
+import com.example.etapa1DAC.exceptions.EventDateConflictException;
 import com.example.etapa1DAC.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,13 +36,18 @@ public class EventService {
                 newEvent.description,
                 newEvent.category
             );
+            LocalDateTime startTime = LocalDateTime.parse(newEvent.start_time);
+            LocalDateTime endTime = LocalDateTime.parse(newEvent.end_time);
+            if(!this.validEventDate(startTime, endTime, newEvent.location)) {
+                throw new EventDateConflictException();
+            }
             eventRepository.save(event);
             if (newEvent.start_time != null && newEvent.end_time != null && newEvent.location != null) {
                 EventDate eventDate = new EventDate(
                         event,
                         newEvent.location,
-                        LocalDateTime.parse(newEvent.start_time),
-                        LocalDateTime.parse(newEvent.end_time)
+                        startTime,
+                        endTime
                 );
                 eventDateService.createEventDate(eventDate);
             }
