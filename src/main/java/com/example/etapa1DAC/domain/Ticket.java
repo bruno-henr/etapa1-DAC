@@ -1,6 +1,7 @@
 package com.example.etapa1DAC.domain;
 
 import com.example.etapa1DAC.domain.enums.Restriction;
+import com.example.etapa1DAC.exceptions.NoTicketsAvailable;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -55,6 +56,10 @@ public class Ticket {
             int validDaysLeft,
             Map<String, String> requiredInfo
     ) {
+        if(!ticketType.hasAvailableTickets(quantity)) {
+            throw new NoTicketsAvailable();
+        }
+
         this.quantity = quantity;
         this.event = event;
         this.ticketType = ticketType;
