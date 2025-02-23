@@ -6,6 +6,9 @@ import com.example.etapa1DAC.domain.EventDate;
 import com.example.etapa1DAC.service.EventDateService;
 import com.example.etapa1DAC.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -25,7 +28,16 @@ public class EventController {
     }
 
     @GetMapping("/list")
-    List<Event> listEvents() {
-        return eventService.listEvents();
+    List<Event> listEvents(){return eventService.listEvents();}
+
+    @GetMapping("/filter")
+    Page<Event> filterEvents(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) LocalDateTime startTime,
+            @RequestParam(required = false) LocalDateTime endTime,
+            Pageable pageable){
+
+        return eventService.filterEvents(category, location, startTime, endTime, pageable);
     }
 }
