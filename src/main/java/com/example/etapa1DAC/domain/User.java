@@ -42,6 +42,7 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Permission> permissions = new ArrayList<>();
 
+
     public void addPermission(Permission permission) {
         this.permissions.add(permission);
 //        permission.setUser(this);
