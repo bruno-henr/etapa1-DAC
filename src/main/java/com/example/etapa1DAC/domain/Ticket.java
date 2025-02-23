@@ -1,6 +1,7 @@
 package com.example.etapa1DAC.domain;
 
 import com.example.etapa1DAC.domain.enums.Restriction;
+import com.example.etapa1DAC.exceptions.NoTicketsAvailable;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -24,18 +25,22 @@ public class Ticket {
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
-    private LocalDateTime validUntil;
+    private Integer quantity;
 
     @ManyToOne
-    @JoinColumn(name = "ticket_id", nullable = false)
+    @JoinColumn(name = "event_id", nullable = false)
     private Event event;
-
-    @Column(nullable = false)
-    private Integer quantity;
 
     @ManyToOne
     @JoinColumn(name = "ticket_type_id", nullable = false)
     private TicketType ticketType;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner;
+
+    @Column(nullable = false)
+    private Integer validDaysLeft;
 
     @ElementCollection
     @CollectionTable(name = "ticket_required_fields", joinColumns = @JoinColumn(name = "ticket_id"))
@@ -44,16 +49,22 @@ public class Ticket {
     private Map<String, String> requiredInfo;
 
     public Ticket(
-            LocalDateTime validUntil,
-            Event event,
             Integer quantity,
-            TicketType _ticketType,
+            Event event,
+            TicketType ticketType,
+            User owner,
+            int validDaysLeft,
             Map<String, String> requiredInfo
     ) {
-        this.validUntil = validUntil;
-        this.event = event;
+        if(!ticketType.hasAvailableTickets(quantity)) {
+            throw new NoTicketsAvailable();
+        }
+
         this.quantity = quantity;
-        this.ticketType = _ticketType;
+        this.event = event;
+        this.ticketType = ticketType;
+        this.owner = owner;
+        this.validDaysLeft = validDaysLeft;
         this.requiredInfo = requiredInfo;
     }
 }
