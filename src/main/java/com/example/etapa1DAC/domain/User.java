@@ -1,10 +1,7 @@
 package com.example.etapa1DAC.domain;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -22,7 +19,7 @@ public class User {
     private Long id;
 
     @Column(nullable = false, length = 255)
-    private String nome;
+    private String name;
 
     @Column(nullable = false, length = 255)
     private String email;
@@ -35,6 +32,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Permission> permissions = new ArrayList<>();
+
 
     public void addPermission(Permission permission) {
         this.permissions.add(permission);
