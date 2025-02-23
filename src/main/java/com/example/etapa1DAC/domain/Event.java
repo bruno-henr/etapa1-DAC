@@ -29,11 +29,8 @@ public class Event {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @Column(nullable = false)
-    private String location;
-
-    @Column(nullable = false)
-    private Double price;
+    @Column
+    private String category;
 
     //    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -42,10 +39,9 @@ public class Event {
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Ticket> tickets = new HashSet<>();
 
-    public Event(String name, String description, String location, Double price) {
+    public Event(String name, String description, String category) {
         this.name = name;
         this.description = description;
-        this.location = location;
-        this.price = price;
+        this.category = category;
     }
 }

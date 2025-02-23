@@ -21,7 +21,6 @@ public class TicketType {
     @Column(nullable = false)
     private String name;
 
-
     @ElementCollection
     @CollectionTable(
             name = "ticket_type_required_fields",
@@ -41,14 +40,19 @@ public class TicketType {
     @Column(nullable = false)
     private Integer soldQuantity = 0;
 
-    public TicketType(String name, Integer totalQuantity) {
+    @Column(nullable = false)
+    private Double price;
+
+    public TicketType(String name, Integer totalQuantity, Double price) {
         this.totalQuantity = totalQuantity;
         this.name = name;
+        this.price = price;
     }
 
-    public TicketType(String name, Integer totalQuantity, Map<String, Object> requiredFields) {
+    public TicketType(String name, Integer totalQuantity, Double price, Map<String, Object> requiredFields) {
         this.totalQuantity = totalQuantity;
         this.name = name;
+        this.price = price;
         this.requiredFields = requiredFields;
     }
 
