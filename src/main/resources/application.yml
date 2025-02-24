@@ -3,9 +3,9 @@ spring:
     name: etapa1DAC
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/dac
-    username: dac
-    password: dac
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: 1235
     driver-class-name: org.postgresql.Driver
 
   jpa:

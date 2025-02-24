@@ -16,6 +16,7 @@ import java.util.Map;
 @AllArgsConstructor
 @ToString
 @Table(name = "ticket")
+@Builder
 public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

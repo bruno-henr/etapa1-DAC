@@ -1,10 +1,13 @@
 package com.example.etapa1DAC.controller;
 
 import com.example.etapa1DAC.DTO.CreateEventDTO;
+import com.example.etapa1DAC.controller.request.BuyTicketRequest;
+import com.example.etapa1DAC.controller.response.BuyTicketResponse;
 import com.example.etapa1DAC.domain.Event;
 import com.example.etapa1DAC.domain.EventDate;
 import com.example.etapa1DAC.service.EventDateService;
 import com.example.etapa1DAC.service.EventService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,5 +42,10 @@ public class EventController {
             Pageable pageable){
 
         return eventService.filterEvents(category, location, startTime, endTime, pageable);
+    }
+
+    @PostMapping("{id}/buy")
+    BuyTicketResponse buyTicket(@Valid @RequestBody BuyTicketRequest request, @PathVariable Long eventId){
+        return eventService.buyTicket(request, eventId);
     }
 }
