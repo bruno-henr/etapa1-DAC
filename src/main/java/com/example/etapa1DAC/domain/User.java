@@ -45,13 +45,7 @@ public class User {
 
     public void addPermission(Permission permission) {
         this.permissions.add(permission);
-//        permission.setUser(this);
+        permission.setUser(this);
     }
 
-    public User(String name, String email, String password, boolean active) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.active = active;
-    }
 }
