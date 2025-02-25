@@ -3,6 +3,7 @@ package com.example.etapa1DAC.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -17,7 +18,9 @@ public class Permission {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    private String name;
+    @Enumerated(STRING)
+    private Function function;
+
 
     @ManyToOne
     @JoinColumn(name = "user_id")
