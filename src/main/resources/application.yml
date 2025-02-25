@@ -3,9 +3,9 @@ spring:
     name: etapa1DAC
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: 1235
+    url: jdbc:postgresql://localhost:5432/dac
+    username: dac
+    password: dac
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -19,9 +19,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    ##lembrar de mudar na aparesentacao, ainda vou criar um
-    username: seu-email@gmail.com
-    password: sua-senha
+    username: 'aksdaksda'
+    password: 'dsfsdfsdf'
     protocol: smtp
     properties:
       mail:
@@ -29,9 +28,9 @@ spring:
           auth: true
           starttls:
             enable: true
-          connectiontimeout: 5000
-          timeout: 5000
-          writetimeout: 5000
+          connectiontimeout: 50000
+          timeout: 50000
+          writetimeout: 50000
 
 logging:
   level:

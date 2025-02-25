@@ -44,7 +44,7 @@ public class EventController {
         return eventService.filterEvents(category, location, startTime, endTime, pageable);
     }
 
-    @PostMapping("{id}/buy")
+    @PostMapping("{eventId}/buy-ticket")
     BuyTicketResponse buyTicket(@Valid @RequestBody BuyTicketRequest request, @PathVariable Long eventId){
         return eventService.buyTicket(request, eventId);
     }
