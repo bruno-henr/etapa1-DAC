@@ -32,11 +32,13 @@ public class Event {
     @Column
     private String category;
 
-    //    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+
+	//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<EventDate> eventDates = new HashSet<>();
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+
+	@OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Ticket> tickets = new HashSet<>();
 
     public Event(String name, String description, String category) {
