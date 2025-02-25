@@ -53,8 +53,8 @@ public class UserService {
 
     private Permission getDefaultPermission(){
         Permission permission = new Permission();
-        permissao.setFunction(Function.USER);
-        return permissao;
+        permission.setFunction(Function.USER);
+        return permission;
     }
 
 
