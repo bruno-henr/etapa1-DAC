@@ -1,7 +1,7 @@
 package com.example.etapa1DAC.controller;
 
 import com.example.etapa1DAC.controller.response.UserResponse;
-import com.example.etapa1DAC.service.FindUserSecurityService;
+import com.example.etapa1DAC.service.AuthenticatedUserService;
 import com.example.etapa1DAC.service.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -23,8 +23,5 @@ public class UserSignUpRequest {
     @NotBlank
     private String password;
 
-    @NotNull
-    @NotEmpty
-    private List<String>permissions;
 
 }

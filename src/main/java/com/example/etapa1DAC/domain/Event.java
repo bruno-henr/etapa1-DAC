@@ -44,4 +44,24 @@ public class Event {
         this.description = description;
         this.category = category;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Set<EventDate> getEventDates() {
+        return eventDates;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public Set<Ticket> getTickets() {
+        return tickets;
+    }
 }

@@ -20,17 +20,11 @@ public class UserMapper {
 
     public static UserResponse toResponse(User entity) {
         return UserResponse.builder()
-                .nome(entity.getName())
+                .name(entity.getName())
                 .email(entity.getEmail())
-                .permissoes(buildPermissoesResponse(entity.getPermissions()))
                 .build();
     }
 
-    private static List<String> buildPermissoesResponse(List<Permission> permissions) {
-        return permissions.stream()
-                .map(Permission::getName)
-                .collect(toList());
-    }
 
 
 }
