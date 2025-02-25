@@ -24,7 +24,7 @@ public class User {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 255)
+	@Column(nullable = false, length = 255)
     private String name;
 
     @Column(nullable = false, length = 255)
@@ -45,7 +45,13 @@ public class User {
 
     public void addPermission(Permission permission) {
         this.permissions.add(permission);
-        permission.setUser(this);
+//        permission.setUser(this);
     }
 
+    public User(String name, String email, String password, boolean active) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.active = active;
+    }
 }

@@ -32,16 +32,16 @@ public class EventDate {
     private Event event;
 
     @Column(nullable = false)
-    private LocalDateTime start_time;
+    private LocalDateTime startTime;
 
     @Column(nullable = false)
-    private LocalDateTime end_time;
+    private LocalDateTime endTime;
 
     public EventDate(Event event, String location, LocalDateTime startTime, LocalDateTime endTime) {
         this.event = event;
         this.location = location;
-        this.start_time = startTime;
-        this.end_time = endTime;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
 	public Long getId() {

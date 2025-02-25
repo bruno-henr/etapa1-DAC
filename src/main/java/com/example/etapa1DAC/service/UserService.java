@@ -26,9 +26,12 @@ public class UserService {
     @Autowired
     private AuthenticatedUserService authenticatedUserService;
 
+    public User getAuthenticatedUser() {
+        return authenticatedUserService.get();
+    }
 
     public UserResponse find() {
-        User authenticatedUser = authenticatedUserService.get();
+        User authenticatedUser = getAuthenticatedUser();
         return toResponse(authenticatedUser);
     }
 
@@ -49,7 +52,7 @@ public class UserService {
     }
 
     private Permission getDefaultPermission(){
-        Permission permissao = new Permission();
+        Permission permission = new Permission();
         permissao.setFunction(Function.USER);
         return permissao;
     }

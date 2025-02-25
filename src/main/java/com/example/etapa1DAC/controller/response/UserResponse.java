@@ -1,14 +1,16 @@
 package com.example.etapa1DAC.controller.response;
 
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-@Getter @Builder @AllArgsConstructor @Setter @NoArgsConstructor
+@Getter @Builder
 public class UserResponse {
 
-    private String name;
+    private String nome;
     private String email;
-
+	private List<String> permissoes;
 }
