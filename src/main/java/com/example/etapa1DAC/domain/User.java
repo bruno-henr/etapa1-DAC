@@ -36,6 +36,9 @@ public class User {
     @Column(nullable = false)
     private boolean active;
 
+    @Column(nullable = false)
+    private String type;
+
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Ticket> tickets = new HashSet<>();
 
