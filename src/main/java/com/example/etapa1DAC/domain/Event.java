@@ -46,40 +46,4 @@ public class Event {
         this.description = description;
         this.category = category;
     }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public String getCategory() {
-		return category;
-	}
-
-    public Set<EventDate> getEventDates() {
-        return eventDates;
-    }
 }
