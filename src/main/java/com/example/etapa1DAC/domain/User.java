@@ -42,15 +42,10 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Permission> permissions = new ArrayList<>();
 
+
     public void addPermission(Permission permission) {
         this.permissions.add(permission);
-//        permission.setUser(this);
+        permission.setUser(this);
     }
 
-    public User(String name, String email, String password, boolean active) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.active = active;
-    }
 }
