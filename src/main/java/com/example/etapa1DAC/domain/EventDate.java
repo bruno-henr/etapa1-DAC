@@ -32,63 +32,15 @@ public class EventDate {
     private Event event;
 
     @Column(nullable = false)
-    private LocalDateTime start_time;
+    private LocalDateTime startTime;
 
     @Column(nullable = false)
-    private LocalDateTime end_time;
+    private LocalDateTime endTime;
 
     public EventDate(Event event, String location, LocalDateTime startTime, LocalDateTime endTime) {
         this.event = event;
         this.location = location;
-        this.start_time = startTime;
-        this.end_time = endTime;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-	public Event getEvent() {
-		return event;
-	}
-
-	public void setEvent(Event event) {
-		this.event = event;
-	}
-
-	public LocalDateTime getStart_time() {
-		return start_time;
-	}
-
-	public void setStart_time(LocalDateTime start_time) {
-		this.start_time = start_time;
-	}
-
-	public LocalDateTime getEnd_time() {
-		return end_time;
-	}
-
-	public void setEnd_time(LocalDateTime end_time) {
-		this.end_time = end_time;
-	}
 }

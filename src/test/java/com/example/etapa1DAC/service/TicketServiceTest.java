@@ -61,11 +61,11 @@ class TicketServiceTest {
 
         Page<Ticket> ticketPage = new PageImpl<>(List.of(ticket1, ticket2), pageable, 2);
 
-        when(userService.get()).thenReturn(mockUser);
+        when(userService.getAuthenticatedUser()).thenReturn(mockUser);
         when(ticketRepository.findByOwnerId(mockUser.getId(), pageable)).thenReturn(ticketPage);
 
         // Act
-        Page<Ticket> result = ticketService.myTickets(pageable);
+        Page<Ticket> result = ticketService.myTickets(mockUser.getId(), pageable);
 
         // Assert
         assertNotNull(result);
@@ -80,11 +80,11 @@ class TicketServiceTest {
         // Arrange
         Page<Ticket> emptyPage = Page.empty(pageable);
 
-        when(userService.get()).thenReturn(mockUser);
+        when(userService.getAuthenticatedUser()).thenReturn(mockUser);
         when(ticketRepository.findByOwnerId(mockUser.getId(), pageable)).thenReturn(emptyPage);
 
         // Act
-        Page<Ticket> result = ticketService.myTickets(pageable);
+        Page<Ticket> result = ticketService.myTickets(mockUser.getId(), pageable);
 
         // Assert
         assertNotNull(result);

@@ -24,13 +24,12 @@ public class UserService {
     @Autowired
     private AuthenticatedUserService authenticatedUserService;
 
-    public User get() {
-        UserResponse userResponse = find();
-        return this.userRepository.findByEmail(userResponse.getEmail());
+    public User getAuthenticatedUser() {
+        return authenticatedUserService.get();
     }
 
     public UserResponse find() {
-        User authenticatedUser = authenticatedUserService.get();
+        User authenticatedUser = getAuthenticatedUser();
         return toResponse(authenticatedUser);
     }
 

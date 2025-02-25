@@ -16,8 +16,9 @@ public class TicketService {
     @Autowired
     private UserService userService;
 
-    public Page<Ticket> myTickets(Pageable pageable){
-        User user = this.userService.get();
-        return this.ticketRepository.findByOwnerId(user.getId(), pageable);
+    public Page<Ticket> myTickets(Long userId, Pageable pageable){
+        return this.ticketRepository.findByOwnerId(userId, pageable);
     }
+
+
 }
