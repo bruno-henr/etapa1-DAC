@@ -12,6 +12,9 @@ public class UserResponse {
 
     private String nome;
     private String email;
-    private List<String> permissoes;
+	private List<String> permissoes;
 
+    public String getEmail() {
+        return email;
+    }
 }
