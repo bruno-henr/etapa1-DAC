@@ -43,6 +43,10 @@ public class TicketType {
     @Column(nullable = false)
     private Double price;
 
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Event event;
+
     public TicketType(String name, Integer totalQuantity, Double price) {
         this.totalQuantity = totalQuantity;
         this.name = name;

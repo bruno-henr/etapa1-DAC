@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h1>Olá, <span th:text="${userName}"></span>!</h1>
+<p>Seu ingresso para o evento <strong th:text="${event.name}"></strong> foi confirmado.</p>
+
+<div>
+    <p>Detalhes:</p>
+    <ul>
+        <li>Tipo: <span th:text="${ticketType}"></span></li>
+        <li>Quantidade: <span th:text="${quantity}"></span></li>
+        <li>Total: R$ <span th:text="${#numbers.formatDecimal(totalPrice, 1, 2)}"></span></li>
+    </ul>
+</div>
+</body>
+</html>

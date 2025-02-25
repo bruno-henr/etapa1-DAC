@@ -16,6 +16,21 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: 'aksdaksda'
+    password: 'dsfsdfsdf'
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 50000
+          timeout: 50000
+          writetimeout: 50000
 
 logging:
   level:
