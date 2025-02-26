@@ -13,11 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class LoginController {
 
     @Autowired
-    private UserService userService;
+    private AuthenticatedUserService authenticatedUserService;
 
     @PostMapping
     public UserResponse login() {
-        return userService.find();
+        return authenticatedUserService.getResponse();
     }
 
 

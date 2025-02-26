@@ -1,34 +1,34 @@
 package com.example.etapa1DAC.service;
 
-import com.example.etapa1DAC.DTO.CreateEventDTO;
-import com.example.etapa1DAC.DTO.EventWithDatesDTO;
+import com.example.etapa1DAC.controller.request.CreateEventRequest;
 import com.example.etapa1DAC.controller.request.BuyTicketRequest;
 import com.example.etapa1DAC.controller.response.BuyTicketResponse;
 import com.example.etapa1DAC.domain.*;
 import com.example.etapa1DAC.exceptions.EventDateConflictException;
+import com.example.etapa1DAC.mapper.EventDateMapper;
+import com.example.etapa1DAC.mapper.EventMapper;
 import com.example.etapa1DAC.mapper.TicketMapper;
 import com.example.etapa1DAC.repository.EventRepository;
 import com.example.etapa1DAC.repository.TicketRepository;
 import com.example.etapa1DAC.repository.TicketTypeRepository;
-import com.example.etapa1DAC.repository.UserRepository;
+import com.example.etapa1DAC.service.search.FindEvent;
+import com.example.etapa1DAC.service.search.FindTicketType;
+import com.example.etapa1DAC.service.validate.EventDateValidate;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Service
 public class EventService {
@@ -36,56 +36,42 @@ public class EventService {
     EventRepository eventRepository;
     @Autowired
     EventDateService  eventDateService;
-
     @Autowired
     TicketRepository ticketRepository;
-
     @Autowired
     TicketTypeRepository ticketTypeRepository;
-
     @Autowired
     AuthenticatedUserService authenticatedUserService;
+    @Autowired
+    EmailService emailService;
+    @Autowired
+    EventDateValidate eventDateValidate;
+    @Autowired
+    FindEvent findEvent;
+    @Autowired
+    FindTicketType findTicketType;
 
-    @Autowired EmailService emailService;
-
-
-
-    public boolean validEventDate(LocalDateTime startTime, LocalDateTime endTime, String location) {
-        EventWithDatesDTO eventFind = eventRepository.findEventsAndDatesByLocation(location);
-
-        if (eventFind.getEventId() == null) {
-            return true;
-        }
-
-        return endTime.isBefore(eventFind.getStartTime()) || startTime.isAfter(eventFind.getEndTime());
-    }
-
-    public Event createEvent(CreateEventDTO newEvent) {
+    @Transactional
+    public Event createEvent(CreateEventRequest newEvent) {
         try {
-            Event event = new Event(
-                newEvent.name,
-                newEvent.description,
-                newEvent.category
-            );
+            Event event = EventMapper.toEntity(newEvent);
             LocalDateTime startTime = LocalDateTime.parse(newEvent.start_time);
             LocalDateTime endTime = LocalDateTime.parse(newEvent.end_time);
-            if(!this.validEventDate(startTime, endTime, newEvent.location)) {
+
+            if(!eventDateValidate.validEventDate(startTime, endTime, newEvent.location)) {
                 throw new EventDateConflictException();
             }
-            eventRepository.save(event);
+
             if (newEvent.start_time != null && newEvent.end_time != null && newEvent.location != null) {
-                EventDate eventDate = new EventDate(
-                        event,
-                        newEvent.location,
-                        startTime,
-                        endTime
-                );
+                EventDate eventDate = EventDateMapper.toEntity(event, newEvent.location, startTime, endTime);
+
                 eventDateService.createEventDate(eventDate);
+                eventRepository.save(event);
             }
 
             return event;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "não foi possivel criar o evento" + e.getMessage());
         }
     }
 
@@ -128,12 +114,8 @@ public class EventService {
     @Transactional
     public BuyTicketResponse buyTicket(BuyTicketRequest request, Long eventId) {
         User authenticatedUser = authenticatedUserService.get();
-
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Evento não encontrado"));
-
-        TicketType ticketType = ticketTypeRepository.findById(request.getTicketTypeId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingresso para esse evento não encontrado"));
+        Event event = findEvent.byId(eventId);
+        TicketType ticketType = findTicketType.byId(request.getTicketTypeId());
 
         Map<String, Object> requiredFields = ticketType.getRequiredFields();
         if (requiredFields != null) {
@@ -145,17 +127,11 @@ public class EventService {
         }
 
         if (!ticketType.hasAvailableTickets(request.getQuantity())) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Ingressos esgotados para o tipo: " + ticketType.getName());
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Ingressos esgotados para o show: " + ticketType.getName());
         }
         ticketType.sellTicket(request.getQuantity());
-        ticketTypeRepository.save(ticketType);
 
-        Ticket newTicket = TicketMapper.toEntity(
-                request,
-                event,
-                ticketType,
-                authenticatedUser
-        );
+        Ticket newTicket = TicketMapper.toEntity(request, event, ticketType, authenticatedUser);
 
         ticketRepository.save(newTicket);
 

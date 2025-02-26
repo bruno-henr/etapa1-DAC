@@ -1,6 +1,5 @@
 package com.example.etapa1DAC.domain;
 
-import com.example.etapa1DAC.domain.enums.Restriction;
 import com.example.etapa1DAC.exceptions.NoTicketsAvailable;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,7 +14,6 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Table(name = "ticket")
 @Builder
 public class Ticket {
     @Id

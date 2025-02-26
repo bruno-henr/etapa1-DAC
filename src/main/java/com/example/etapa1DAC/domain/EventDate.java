@@ -14,7 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Table(name = "event_date", uniqueConstraints = {@UniqueConstraint(name = "unique_location_start_time", columnNames = {"location", "start_time"})})
+@Builder
+@Table(uniqueConstraints = {@UniqueConstraint(name = "unique_location_start_time", columnNames = {"location", "start_time"})})
 public class EventDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,5 @@
 package com.example.etapa1DAC.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,8 +13,8 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @ToString
-@Table(name = "event")
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,8 +42,5 @@ public class Event {
     private Set<Ticket> tickets = new HashSet<>();
 
     public Event(String name, String description, String category) {
-        this.name = name;
-        this.description = description;
-        this.category = category;
     }
 }

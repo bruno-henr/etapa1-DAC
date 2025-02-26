@@ -1,6 +1,6 @@
 package com.example.etapa1DAC.Event;
 
-import com.example.etapa1DAC.DTO.CreateEventDTO;
+import com.example.etapa1DAC.controller.request.CreateEventRequest;
 import com.example.etapa1DAC.domain.Event;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -8,12 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +26,7 @@ public class EventControllerIntegrationTest {
     @Test
     @Transactional
     public void testCreateEvent() {
-        CreateEventDTO newEvent = new CreateEventDTO();
+        CreateEventRequest newEvent = new CreateEventRequest();
         newEvent.name = "Concert";
         newEvent.description = "A live music concert.";
         newEvent.category = "Music";
