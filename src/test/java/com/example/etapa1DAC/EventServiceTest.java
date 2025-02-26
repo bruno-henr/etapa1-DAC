@@ -1,7 +1,7 @@
 package com.example.etapa1DAC;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,16 +19,13 @@ import com.example.etapa1DAC.repository.TicketTypeRepository;
 import com.example.etapa1DAC.service.AuthenticatedUserService;
 import com.example.etapa1DAC.service.EmailService;
 import com.example.etapa1DAC.service.EventService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.server.ResponseStatusException;
 
-@RunWith(SpringRunner.class)
 public class EventServiceTest {
 
     @InjectMocks
@@ -49,9 +46,9 @@ public class EventServiceTest {
     @Mock
     private EmailService emailService;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
@@ -83,7 +80,7 @@ public class EventServiceTest {
         verify(ticketRepository).save(any(Ticket.class));
     }
 
-    @Test(expected = ResponseStatusException.class)
+    @Test()
     public void testBuyTicketEventNotFound() {
         Long eventId = 1L;
         BuyTicketRequest request = new BuyTicketRequest();
@@ -92,6 +89,8 @@ public class EventServiceTest {
 
         when(eventRepository.findById(eventId)).thenReturn(Optional.empty());
 
-        eventService.buyTicket(request, eventId);
+        assertThrows(ResponseStatusException.class, () -> {
+            eventService.buyTicket(request, eventId);
+        });
     }
 }

@@ -1,5 +1,6 @@
 package com.example.etapa1DAC.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -38,7 +39,7 @@ public class Event {
     private Set<EventDate> eventDates = new HashSet<>();
 
 
-	@OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Ticket> tickets = new HashSet<>();
 
     public Event(String name, String description, String category) {

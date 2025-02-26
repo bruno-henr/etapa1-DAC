@@ -39,16 +39,4 @@ public class EventWithDatesDTO {
         this.startTime = startTime;
         this.endTime = endTime;
     }
-
-    public Long getEventId() {
-        return this.eventId;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
 }

@@ -72,24 +72,4 @@ public class TicketType {
         }
         this.soldQuantity += quantity;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public Integer getTotalQuantity() {
-        return totalQuantity;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public Map<String, Object> getRequiredFields() {
-        return requiredFields;
-    }
-
-    public Integer getSoldQuantity() {
-        return soldQuantity;
-    }
 }
