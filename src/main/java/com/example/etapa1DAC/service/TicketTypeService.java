@@ -1,19 +1,16 @@
 package com.example.etapa1DAC.service;
 
-import com.example.etapa1DAC.DTO.TicketTypeDTO;
+import com.example.etapa1DAC.controller.request.TicketTypeRequest;
 import com.example.etapa1DAC.domain.Event;
 import com.example.etapa1DAC.domain.TicketType;
 import com.example.etapa1DAC.repository.EventRepository;
-import com.example.etapa1DAC.repository.TicketRepository;
 import com.example.etapa1DAC.repository.TicketTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class TicketTypeService {
@@ -23,7 +20,7 @@ public class TicketTypeService {
     @Autowired
     EventRepository eventRepository;
 
-    public TicketType createTicketType(TicketTypeDTO ticketType) {
+    public TicketType createTicketType(TicketTypeRequest ticketType) {
         try {
 
             Event event = eventRepository.findById(ticketType.getEventId())

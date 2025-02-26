@@ -1,6 +1,6 @@
 package com.example.etapa1DAC.controller;
 
-import com.example.etapa1DAC.DTO.TicketTypeDTO;
+import com.example.etapa1DAC.controller.request.TicketTypeRequest;
 import com.example.etapa1DAC.domain.TicketType;
 import com.example.etapa1DAC.service.TicketTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ public class TicketTypeController {
     private TicketTypeService ticketTypeService;
 
     @PostMapping("/create")
-    TicketType createTicketType(@RequestBody TicketTypeDTO ticketType) {
+    TicketType createTicketType(@RequestBody TicketTypeRequest ticketType) {
         try {
             return this.ticketTypeService.createTicketType(ticketType);
         } catch (Exception e) {

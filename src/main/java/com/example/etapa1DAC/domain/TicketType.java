@@ -12,7 +12,6 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Table(name = "ticket_type")
 public class TicketType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
