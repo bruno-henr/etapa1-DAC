@@ -1,6 +1,6 @@
 package com.example.etapa1DAC.TicketType;
 
-import com.example.etapa1DAC.DTO.TicketTypeDTO;
+import com.example.etapa1DAC.controller.request.TicketTypeRequest;
 import com.example.etapa1DAC.domain.TicketType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class TicketTypeControllerIntegrationTest {
 
     @Test
     public void testCreateTicketType() {
-        TicketTypeDTO newTicketType = new TicketTypeDTO();
+        TicketTypeRequest newTicketType = new TicketTypeRequest();
         newTicketType.setName("VIP");
         newTicketType.setTotalQuantity(100);
         newTicketType.setPrice(200.00);

@@ -1,6 +1,6 @@
 package com.example.etapa1DAC.repository;
 
-import com.example.etapa1DAC.DTO.EventWithDatesDTO;
+import com.example.etapa1DAC.domain.EventWithDates;
 import com.example.etapa1DAC.Utils;
 import com.example.etapa1DAC.domain.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -29,11 +28,11 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
     )
     List<Object[]> queryFindEventsAndDatesByLocation(@Param("location") String location);
 
-    default EventWithDatesDTO findEventsAndDatesByLocation(String location) {
+    default EventWithDates findEventsAndDatesByLocation(String location) {
         List<Object[]> results = this.queryFindEventsAndDatesByLocation(location);
 
         if (results.isEmpty()) {
-            return new EventWithDatesDTO();
+            return new EventWithDates();
         }
 
         Object[] tuple = results.get(0);
