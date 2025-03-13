@@ -17,7 +17,6 @@ import com.example.etapa1DAC.repository.EventRepository;
 import com.example.etapa1DAC.repository.TicketRepository;
 import com.example.etapa1DAC.repository.TicketTypeRepository;
 import com.example.etapa1DAC.service.AuthenticatedUserService;
-import com.example.etapa1DAC.service.EmailService;
 import com.example.etapa1DAC.service.EventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,9 +41,6 @@ public class EventServiceTest {
 
     @Mock
     private TicketRepository ticketRepository;
-
-    @Mock
-    private EmailService emailService;
 
     @BeforeEach
     public void setUp() {

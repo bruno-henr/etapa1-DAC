@@ -7,6 +7,7 @@ import com.example.etapa1DAC.controller.response.BuyTicketResponse;
 import com.example.etapa1DAC.domain.*;
 import com.example.etapa1DAC.exceptions.EventDateConflictException;
 import com.example.etapa1DAC.mapper.TicketMapper;
+import com.example.etapa1DAC.messaging.emailService.EmailRequestProducer;
 import com.example.etapa1DAC.repository.EventRepository;
 import com.example.etapa1DAC.repository.TicketRepository;
 import com.example.etapa1DAC.repository.TicketTypeRepository;
@@ -46,7 +47,8 @@ public class EventService {
     @Autowired
     AuthenticatedUserService authenticatedUserService;
 
-    @Autowired EmailService emailService;
+    @Autowired
+    EmailRequestProducer emailRequestProducer;
 
 
 
@@ -161,7 +163,7 @@ public class EventService {
 
         double totalPrice = ticketType.getPrice() * request.getQuantity();
 
-        emailService.sendPurchaseConfirmation(authenticatedUser, newTicket, totalPrice);
+        emailRequestProducer.sendPurchaseConfirmationEmail(authenticatedUser, newTicket, totalPrice);
 
         return TicketMapper.toResponse(newTicket, totalPrice);
     }

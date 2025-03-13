@@ -8,6 +8,12 @@ spring:
     password: dac
     driver-class-name: org.postgresql.Driver
 
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: dac
+    password: dac
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -41,3 +47,14 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
+
+rabbitmq:
+  email:
+    queue: email-request-queue
+    exchange: email-exchange
+    response-success: email-response-success-queue
+    response-error: email-response-error-queue
+    routing-key:
+      queue: email-request
+      response-success: email-response-success
+      response-error: email-response-error
