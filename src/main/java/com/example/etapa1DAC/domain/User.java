@@ -11,8 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
@@ -36,8 +35,8 @@ public class User {
     @Column(nullable = false)
     private boolean active;
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Ticket> tickets = new HashSet<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Purchase> purchases;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Permission> permissions = new ArrayList<>();
@@ -48,10 +47,4 @@ public class User {
         permission.setUser(this);
     }
 
-    public User(String name, String email, String password, boolean active) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.active = active;
-    }
 }
