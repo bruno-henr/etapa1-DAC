@@ -12,9 +12,13 @@ import java.util.stream.Collectors;
 public class UserSecurity implements UserDetails {
 
 
+    private static final String SPRING_PERMISSION_PREFIX = "ROLE_";
+
+
     private Long id;
     private String username;
     private String password;
+
     private List<SimpleGrantedAuthority> authorities;
 
     private boolean accountNonExpired;
@@ -27,16 +31,21 @@ public class UserSecurity implements UserDetails {
         this.id = user.getId();
         this.username = user.getEmail();
         this.password = user.getPassword();
+        this.authorities = convertPermissions(user);
 
         this.accountNonExpired = user.isActive();
         this.accountNonLocked = user.isActive();
         this.credentialsNonExpired = user.isActive();
         this.enabled = user.isActive();
 
-        this.authorities = user.getPermissions().stream()
-                .map(permission -> new SimpleGrantedAuthority(permission.getFunction().getRole()))
+    }
+
+    private List<SimpleGrantedAuthority> convertPermissions(User user) {
+        return user.getPermissions().stream()
+                .map(permissao -> new SimpleGrantedAuthority(SPRING_PERMISSION_PREFIX + permissao.getName()))
                 .collect(Collectors.toList());
     }
+
 
 
 }

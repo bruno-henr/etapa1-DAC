@@ -2,7 +2,6 @@ package com.example.etapa1DAC.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -14,7 +13,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,24 +21,39 @@ public class Event {
     @Column(nullable = false)
     private String name;
 
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner;
+
+    @Column(nullable = false, length = 500)
+    private String location;
+
     @Column(nullable = false, length = 500)
     private String description;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
+    @Column(nullable = false)
+    private Integer maxCapacity;
 
-    @Column
-    private String category;
+    @Column(nullable = false)
+    public LocalDateTime startTime;
 
-
-	//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<EventDate> eventDates = new HashSet<>();
+    @Column(nullable = false)
+    public LocalDateTime endTime;
 
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Ticket> tickets = new HashSet<>();
+    @OneToMany(mappedBy = "event", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private Set<EventDate> dates = new HashSet<>();
 
-    public Event(String name, String description, String category) {
-    }
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<Ticket> tickets;
+
+    @ManyToMany
+    @JoinTable(
+            name = "event_category",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private Set<CategoryEventType> categories;
+
+
 }

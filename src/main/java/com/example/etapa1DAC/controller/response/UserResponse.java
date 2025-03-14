@@ -11,5 +11,5 @@ public class UserResponse {
 
     private String name;
     private String email;
-	private List<String> permissoes;
+	private List<String> permissions;
 }

@@ -13,9 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Builder
-@Table(uniqueConstraints = {@UniqueConstraint(name = "unique_location_start_time", columnNames = {"location", "start_time"})})
 public class EventDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,10 +36,4 @@ public class EventDate {
     @Column(nullable = false)
     private LocalDateTime endTime;
 
-    public EventDate(Event event, String location, LocalDateTime startTime, LocalDateTime endTime) {
-        this.event = event;
-        this.location = location;
-        this.startTime = startTime;
-        this.endTime = endTime;
-    }
 }

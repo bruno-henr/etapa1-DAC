@@ -2,7 +2,7 @@ package com.example.etapa1DAC.service;
 
 import com.example.etapa1DAC.controller.request.UserSignUpRequest;
 import com.example.etapa1DAC.controller.response.UserResponse;
-import com.example.etapa1DAC.domain.Function;
+import com.example.etapa1DAC.domain.enums.Function;
 import com.example.etapa1DAC.domain.Permission;
 import com.example.etapa1DAC.domain.User;
 import com.example.etapa1DAC.mapper.UserMapper;
@@ -11,6 +11,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 import static com.example.etapa1DAC.mapper.UserMapper.toResponse;
 
@@ -34,28 +36,32 @@ public class UserService {
         User authenticatedUser = getAuthenticatedUser();
         return toResponse(authenticatedUser);
     }
-
     @Transactional
+
     public UserResponse add(UserSignUpRequest request) {
 
         User user = UserMapper.toEntity(request);
-        user.setPassword(getPasswordEncoded(request.getPassword()));
-        user.addPermission(getDefaultPermission());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setActive(true);
+
+        request.getPermissions()
+                .forEach(p -> user.addPermission(Permission.builder().name(p).build()));
+
         userRepository.save(user);
 
         return UserMapper.toResponse(user);
     }
 
+
+    public String getHashedPassword(String plainPassword) {
+        return passwordEncoder.encode(plainPassword);
+    }
+
+
     private String getPasswordEncoded(String password) {
         return passwordEncoder.encode(password);
     }
 
-    private Permission getDefaultPermission(){
-        Permission permission = new Permission();
-        permission.setFunction(Function.USER);
-        return permission;
-    }
 
 
 }

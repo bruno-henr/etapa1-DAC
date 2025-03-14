@@ -2,11 +2,16 @@ spring:
   application:
     name: etapa1DAC
 
+
   datasource:
     url: jdbc:postgresql://localhost:5432/dac
     username: dac
     password: dac
     driver-class-name: org.postgresql.Driver
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
 
   jpa:
     hibernate:
@@ -19,8 +24,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: 'aksdaksda'
-    password: 'dsfsdfsdf'
+    username: 'warlla.kelly1@gmail.com'
+    password: 'aqof aglu wggh quxq'
     protocol: smtp
     properties:
       mail:
@@ -31,13 +36,29 @@ spring:
           connectiontimeout: 50000
           timeout: 50000
           writetimeout: 50000
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    exchange: ticketExchange
+    queues:
+      ticket-generation: ticketGenerationQueue
+      email-notification: emailNotificationQueue
+    routing-keys:
+      generate-ticket: generate_ticket
+      send-email: send_email
 
 logging:
   level:
     org:
+      springframework:
+        security: DEBUG
       hibernate:
         SQL: DEBUG
         type:
           descriptor:
             sql:
               BasicBinder: TRACE
+
+
