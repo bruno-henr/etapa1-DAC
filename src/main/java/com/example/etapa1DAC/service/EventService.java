@@ -65,6 +65,8 @@ public class EventService {
         try {
             User authenticatedUser = authenticatedUserService.get();
 
+            eventDateValidate.validEventDate(newEvent.getStartTime(), newEvent.getEndTime(), newEvent.getLocation());
+
             Set<CategoryEventType> categories = newEvent.getCategoryIds().stream()
                     .map(categoryId -> categoryEventTypeRepository.findById(categoryId)
                             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não encontrado")))

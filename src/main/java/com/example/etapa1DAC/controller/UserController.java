@@ -30,11 +30,6 @@ public class UserController {
     private EventService eventService;
 
 
-    @PostMapping
-    public UserResponse add(@Valid @RequestBody UserSignUpRequest request) {
-        return userService.add(request);
-    }
-
     @GetMapping("/me")
     public UserResponse userDetails() {
         return userService.find();

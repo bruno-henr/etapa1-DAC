@@ -9,33 +9,27 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecificationExecutor<Event> {
+
     @Query(
-            value = "SELECT e.id AS eventId, " +
-                    "e.name AS eventName, " +
-                    "e.description AS eventDescription, " +
-                    "ed.location AS eventLocation, " +
-                    "ed.id AS eventDateId, " +
-                    "ed.start_time AS startTime, " +
-                    "ed.end_time AS endTime " +
+            value = "SELECT COUNT(*) > 0 " +
                     "FROM event e " +
                     "INNER JOIN event_date ed ON e.id = ed.event_id " +
-                    "WHERE ed.location = :location LIMIT 1",
+                    "WHERE ed.location = :location " +
+                    "AND ( " +
+                    "   (ed.start_time <= :startTime AND ed.end_time >= :startTime) OR " +
+                    "   (ed.start_time <= :endTime AND ed.end_time >= :endTime) OR " +
+                    "   (ed.start_time >= :startTime AND ed.end_time <= :endTime) " +
+                    ")",
             nativeQuery = true
     )
-    List<Object[]> queryFindEventsAndDatesByLocation(@Param("location") String location);
-
-    default EventWithDates findEventsAndDatesByLocation(String location) {
-        List<Object[]> results = this.queryFindEventsAndDatesByLocation(location);
-
-        if (results.isEmpty()) {
-            return new EventWithDates();
-        }
-
-        Object[] tuple = results.get(0);
-        return Utils.mapObjectArrayToEventWithDatesDTO(tuple);
-    }
+    boolean existsByLocationAndOverlappingTime(
+            @Param("location") String location,
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime
+    );
 }

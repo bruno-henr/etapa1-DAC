@@ -20,8 +20,7 @@ public class Permission {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @Enumerated(STRING)
-    private Function function;
+    private String name;
 
 
     @ManyToOne
