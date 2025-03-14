@@ -4,18 +4,18 @@ import com.example.etapa1DAC.controller.request.CreateEventRequest;
 import com.example.etapa1DAC.controller.request.BuyTicketRequest;
 import com.example.etapa1DAC.controller.request.CreateEventTicket;
 import com.example.etapa1DAC.controller.response.BuyTicketResponse;
+import com.example.etapa1DAC.controller.response.ListUserTicketsResponse;
 import com.example.etapa1DAC.domain.*;
 import com.example.etapa1DAC.domain.enums.PurchaseStatus;
 import com.example.etapa1DAC.exceptions.EventDateConflictException;
-import com.example.etapa1DAC.mapper.EventDateMapper;
-import com.example.etapa1DAC.mapper.EventMapper;
-import com.example.etapa1DAC.mapper.TicketMapper;
+import com.example.etapa1DAC.mapper.*;
 import com.example.etapa1DAC.repository.*;
 import com.example.etapa1DAC.service.search.FindEvent;
 import com.example.etapa1DAC.service.validate.EventDateValidate;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import jdk.jfr.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,18 +38,13 @@ public class EventService {
     @Autowired
     EventRepository eventRepository;
     @Autowired
-    EventDateService  eventDateService;
-    @Autowired
     TicketRepository ticketRepository;
-
     @Autowired
     AuthenticatedUserService authenticatedUserService;
     @Autowired
     EmailService emailService;
     @Autowired
     EventDateValidate eventDateValidate;
-    @Autowired
-    FindEvent findEvent;
     @Autowired
     PurchaseItemRepository purchaseItemRepository;
     @Autowired
@@ -62,6 +57,8 @@ public class EventService {
     CategoryEventTypeRepository categoryEventTypeRepository;
     @Autowired
     EventDateRepository eventDateRepository;
+    @Autowired
+    TicketMapper ticketMapper;
 
     @Transactional
     public Event createEvent(CreateEventRequest newEvent) {
@@ -70,15 +67,10 @@ public class EventService {
 
             Set<CategoryEventType> categories = newEvent.getCategoryIds().stream()
                     .map(categoryId -> categoryEventTypeRepository.findById(categoryId)
-                            .orElseThrow(() -> new RuntimeException("Categoria não encontrada")))
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não encontrado")))
                     .collect(Collectors.toSet());
 
             Event event = EventMapper.toEntity(newEvent, categories, authenticatedUser);
-
-
-            if (!eventDateValidate.validEventDate(event.getStartTime(), event.getEndTime(), event.getLocation())) {
-                throw new EventDateConflictException();
-            }
 
             event.getDates().forEach(date -> {
                 if (!eventDateValidate.validEventDate(date.getStartTime(), date.getEndTime(), date.getLocation())) {
@@ -95,10 +87,9 @@ public class EventService {
         }
     }
 
-//    public Page<Ticket> myTickets(Pageable pageable){
-//        User authenticatedUser = authenticatedUserService.get();
-//        return this.ticketRepository.findByOwnerId(authenticatedUser.getId(), pageable);
-//    }
+    public Page<ListUserTicketsResponse> findUserTickets(Pageable pageable){
+        User authenticatedUser = authenticatedUserService.get();
+        return purchaseRepository.findTicketsAndEventsByUser(authenticatedUser.getId(), pageable);    }
 
     public Ticket createEventTicket(CreateEventTicket request) {
 
@@ -111,27 +102,10 @@ public class EventService {
                     .orElseThrow(() -> new RuntimeException("Data do evento não encontrada"));
         }
 
-
-        Ticket ticket = Ticket.builder()
-                .event(event)
-                .quantity(request.getQuantity())
-                .modality(request.getModality())
-                .price(request.getPrice())
-                .publicRestriction(request.getPublicRestriction())
-                .validDaysLeft(request.getValidDaysLeft())
-                .eventDate(eventDate)
-                .build();
+        Ticket ticket = ticketMapper.toTicket(request, event, eventDate);
 
         if (request.getFields() != null) {
-            Set<TicketField> fields = request.getFields().stream()
-                    .map(fieldRequest -> TicketField.builder()
-                            .ticket(ticket)
-                            .name(fieldRequest.getName())
-                            .type(fieldRequest.getType())
-                            .required(fieldRequest.getRequired())
-                            .build())
-                    .collect(Collectors.toSet());
-
+            Set<TicketField> fields = TicketFieldMapper.toEntity(request, ticket);
             ticket.setFields(fields);
         }
 
@@ -181,30 +155,20 @@ public class EventService {
     @Transactional
     public BuyTicketResponse buyTicket(BuyTicketRequest request, Long eventId) {
         User authenticatedUser = authenticatedUserService.get();
-        Event event = findEvent.byId(eventId);
 
-        Purchase purchase = Purchase.builder()
-                .user(authenticatedUser)
-                .date(LocalDateTime.now())
-                .status(PurchaseStatus.PENDING)
-                .build();
-        purchase = purchaseRepository.save(purchase);
+        Purchase purchase = PurchaseMapper.toEntity(authenticatedUser);
+        purchaseRepository.save(purchase);
 
-        List<PurchaseItem> purchaseItems = new ArrayList<>();
         BigDecimal totalPrice = BigDecimal.ZERO;
 
-        for (PurchaseItem itemRequest : request.getItems()) {
-            Ticket ticket = ticketRepository.findById(itemRequest.getTicket().getId())
-                    .orElseThrow(() -> new RuntimeException("Ingresso não encontrado"));
+        for (BuyTicketRequest.PurchaseItemRequest itemRequest : request.getItems()) {
+            Ticket ticket = ticketRepository.findById(itemRequest.getTicketId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingresso não encontrado"));
 
-            PurchaseItem purchaseItem = PurchaseItem.builder()
-                    .purchase(purchase)
-                    .ticket(ticket)
-                    .quantity(itemRequest.getQuantity())
-                    .price(ticket.getPrice().multiply(BigDecimal.valueOf(itemRequest.getQuantity())))
-                    .build();
-            purchaseItem = purchaseItemRepository.save(purchaseItem);
-            purchaseItems.add(purchaseItem);
+            PurchaseItem purchaseItem = PurchaseItemMapper.toEntity(itemRequest, purchase, ticket);
+
+            purchaseItemRepository.save(purchaseItem);
+            purchase.getItems().add(purchaseItem);
 
             Set<TicketField> requiredFields = ticket.getFields().stream()
                     .filter(TicketField::getRequired)
@@ -212,25 +176,26 @@ public class EventService {
 
             for (TicketField field : requiredFields) {
                 boolean fieldProvided = itemRequest.getUserInfos().stream()
-                        .anyMatch(userInfo -> userInfo.getTicketField().getId().equals(field.getId()) && userInfo.getInfoValue() != null);
+                        .anyMatch(userInfo ->
+                                userInfo.getTicketFieldId() != null &&
+                                        userInfo.getTicketFieldId().equals(field.getId()) &&
+                                        userInfo.getInfoValue() != null);
 
                 if (!fieldProvided) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                            "Campo obrigatório faltando: " + field.getName());
+                            "Campo obrigatório não preenchido: " + field.getName());
                 }
             }
 
-            PurchaseItem finalPurchaseItem = purchaseItem;
             List<UserInfoTicket> userInfoTickets = itemRequest.getUserInfos().stream()
                     .map(userInfoRequest -> {
-                        TicketField ticketField = ticketFieldRepository.findById(userInfoRequest.getTicketField().getId())
-                                .orElseThrow(() -> new RuntimeException("Campo do ingresso não encontrado"));
+                        TicketField ticketField = ticketFieldRepository.findById(userInfoRequest.getTicketFieldId())
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                        "Campo do ingresso não encontrado: " + userInfoRequest.getTicketFieldId()));
 
-                        return UserInfoTicket.builder()
-                                .purchaseItem(finalPurchaseItem)
-                                .ticketField(ticketField)
-                                .infoValue(userInfoRequest.getInfoValue())
-                                .build();
+                        return UserInfoTicketMapper.toEntity(
+                                userInfoRequest, purchaseItem, ticketField
+                        );
                     })
                     .collect(Collectors.toList());
 
@@ -242,7 +207,10 @@ public class EventService {
             totalPrice = totalPrice.add(purchaseItem.getPrice());
         }
 
-        emailService.sendPurchaseConfirmation(authenticatedUser, purchaseItems, totalPrice);
+        purchase.setStatus(PurchaseStatus.APPROVED);
+        purchaseRepository.save(purchase);
+
+        emailService.sendPurchaseConfirmation(authenticatedUser, purchase.getItems(), totalPrice);
 
         return TicketMapper.toResponse(purchase, totalPrice);
     }

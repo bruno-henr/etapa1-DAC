@@ -1,10 +1,7 @@
 package com.example.etapa1DAC.domain;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.Set;
@@ -15,6 +12,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Builder
+@ToString(exclude = {"purchase"})
+@EqualsAndHashCode(exclude = {"purchase"})
 public class PurchaseItem {
 
     @Id
@@ -22,6 +21,7 @@ public class PurchaseItem {
     private UUID id;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "purchase_id", nullable = false)
     private Purchase purchase;
 

@@ -2,7 +2,7 @@ package com.example.etapa1DAC.service;
 
 import com.example.etapa1DAC.controller.request.UserSignUpRequest;
 import com.example.etapa1DAC.controller.response.UserResponse;
-import com.example.etapa1DAC.domain.Function;
+import com.example.etapa1DAC.domain.enums.Function;
 import com.example.etapa1DAC.domain.Permission;
 import com.example.etapa1DAC.domain.User;
 import com.example.etapa1DAC.mapper.UserMapper;

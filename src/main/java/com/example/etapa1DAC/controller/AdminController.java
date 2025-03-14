@@ -5,6 +5,7 @@ import com.example.etapa1DAC.controller.request.CreateEventTicket;
 import com.example.etapa1DAC.domain.Event;
 import com.example.etapa1DAC.domain.Ticket;
 import com.example.etapa1DAC.service.EventService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,12 +20,12 @@ public class AdminController {
     private EventService eventService;
 
     @PostMapping("/event/create")
-    Event createEvent(@RequestBody CreateEventRequest newEvent) {
+    Event createEvent(@Valid @RequestBody CreateEventRequest newEvent) {
         return this.eventService.createEvent(newEvent);
     }
 
     @PostMapping("/event/createTicket")
-    Ticket createEventTicket(@RequestBody CreateEventTicket newTicket) {
+    Ticket createEventTicket(@Valid @RequestBody CreateEventTicket newTicket) {
         return this.eventService.createEventTicket(newTicket);
     }
 

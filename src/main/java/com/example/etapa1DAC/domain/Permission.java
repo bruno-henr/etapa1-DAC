@@ -1,5 +1,6 @@
 package com.example.etapa1DAC.domain;
 
+import com.example.etapa1DAC.domain.enums.Function;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;

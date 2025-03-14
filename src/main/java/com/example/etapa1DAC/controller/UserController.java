@@ -3,6 +3,7 @@ package com.example.etapa1DAC.controller;
 import com.example.etapa1DAC.controller.request.BuyTicketRequest;
 import com.example.etapa1DAC.controller.request.UserSignUpRequest;
 import com.example.etapa1DAC.controller.response.BuyTicketResponse;
+import com.example.etapa1DAC.controller.response.ListUserTicketsResponse;
 import com.example.etapa1DAC.controller.response.UserResponse;
 import com.example.etapa1DAC.domain.Event;
 import com.example.etapa1DAC.domain.Ticket;
@@ -39,10 +40,10 @@ public class UserController {
         return userService.find();
     }
 
-//    @GetMapping("/myTickets")
-//    Page<Ticket> myTickets(Pageable pageable) {
-//        return eventService.myTickets(pageable);
-//    }
+    @GetMapping("/myTickets")
+    Page<ListUserTicketsResponse> myTickets(Pageable pageable) {
+        return eventService.findUserTickets(pageable);
+    }
 
     @GetMapping("/events/list")
     List<Event> listEvents(){return eventService.listEvents();}

@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,17 +29,26 @@ public class EmailService {
     @Autowired TemplateEngine templateEngine;
 
     @Async
-    public void sendPurchaseConfirmation(User user, List<PurchaseItem> purchaseItems, BigDecimal totalPrice) {
+    public void sendPurchaseConfirmation(User user, Set<PurchaseItem> purchaseItems, BigDecimal totalPrice) {
         try {
+            if (purchaseItems == null || purchaseItems.isEmpty()) {
+                throw new EmailException("A lista de itens da compra está vazia.");
+            }
+
+            PurchaseItem firstItem = purchaseItems.iterator().next();
+            if (firstItem.getTicket() == null || firstItem.getTicket().getEvent() == null) {
+                throw new EmailException("Dados incompletos no item da compra.");
+            }
+
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             helper.setTo(user.getEmail());
-            helper.setSubject("Confirmação de Compra - " + purchaseItems.get(0).getTicket().getEvent().getName());
+            helper.setSubject("Confirmação de Compra - " + firstItem.getTicket().getEvent().getName());
 
             Context context = new Context();
             context.setVariable("userName", user.getName());
-            context.setVariable("event", purchaseItems.get(0).getTicket().getEvent());
+            context.setVariable("event", firstItem.getTicket().getEvent());
             context.setVariable("totalPrice", totalPrice);
 
             List<Map<String, Object>> ticketsList = purchaseItems.stream().map(purchaseItem -> {

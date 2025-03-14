@@ -27,7 +27,7 @@ public class EventMapper {
 
         if (eventRequest.getDates() != null) {
             Set<EventDate> eventDates = eventRequest.getDates().stream()
-                    .map(dateRequest -> EventDateMapper.toEntity(event, dateRequest)) // ← Novo método no EventDateMapper
+                    .map(dateRequest -> EventDateMapper.toEntity(event, dateRequest))
                     .collect(Collectors.toSet());
             event.setDates(eventDates);
         }

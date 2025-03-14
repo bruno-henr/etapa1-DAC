@@ -10,16 +10,17 @@ import lombok.Setter;
 import java.util.List;
 
 @Getter@Setter
-public class UserSignUpRequest {
+public class
+UserSignUpRequest {
 
-    @NotBlank
+    @NotBlank(message = "o nome é obrigatório")
     private String name;
 
-    @NotNull
-    @Email
+    @NotBlank(message = "o email é obrigatório")
+    @Email(message = "formato de email invalido")
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "obrigatório")
     private String password;
 
 
