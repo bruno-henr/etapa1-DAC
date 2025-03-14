@@ -59,6 +59,8 @@ public class EventService {
     EventDateRepository eventDateRepository;
     @Autowired
     TicketMapper ticketMapper;
+    @Autowired
+    TicketEventPublisher ticketEventPublisher;
 
     @Transactional
     public Event createEvent(CreateEventRequest newEvent) {
@@ -93,6 +95,7 @@ public class EventService {
         User authenticatedUser = authenticatedUserService.get();
         return purchaseRepository.findTicketsAndEventsByUser(authenticatedUser.getId(), pageable);    }
 
+    @Transactional
     public Ticket createEventTicket(CreateEventTicket request) {
 
         Event event = eventRepository.findById(request.getEventId())
@@ -163,6 +166,8 @@ public class EventService {
 
         BigDecimal totalPrice = BigDecimal.ZERO;
 
+        List<TicketPublisherEvent.TicketItem> ticketItems = new ArrayList<>();
+
         for (BuyTicketRequest.PurchaseItemRequest itemRequest : request.getItems()) {
             Ticket ticket = ticketRepository.findById(itemRequest.getTicketId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingresso não encontrado"));
@@ -207,12 +212,16 @@ public class EventService {
             ticketRepository.save(ticket);
 
             totalPrice = totalPrice.add(purchaseItem.getPrice());
+            ticketItems.add(new TicketPublisherEvent.TicketItem(ticket.getId(), itemRequest.getQuantity()));
         }
 
         purchase.setStatus(PurchaseStatus.APPROVED);
         purchaseRepository.save(purchase);
 
         emailService.sendPurchaseConfirmation(authenticatedUser, purchase.getItems(), totalPrice);
+
+        TicketPublisherEvent event = new TicketPublisherEvent(purchase.getId(), authenticatedUser.getId(), totalPrice, ticketItems, eventId);
+        ticketEventPublisher.publishTicketPurchased(event);
 
         return TicketMapper.toResponse(purchase, totalPrice);
     }

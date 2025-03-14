@@ -5,8 +5,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/dac
-    username: postgres
-    password: 1235
+    username: dac
+    password: dac
     driver-class-name: org.postgresql.Driver
 
   flyway:
@@ -36,6 +36,18 @@ spring:
           connectiontimeout: 50000
           timeout: 50000
           writetimeout: 50000
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    exchange: ticketExchange
+    queues:
+      ticket-generation: ticketGenerationQueue
+      email-notification: emailNotificationQueue
+    routing-keys:
+      generate-ticket: generate_ticket
+      send-email: send_email
 
 logging:
   level:
