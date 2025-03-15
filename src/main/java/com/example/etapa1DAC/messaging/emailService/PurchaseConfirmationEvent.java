@@ -1,6 +1,10 @@
 package com.example.etapa1DAC.messaging.emailService;
 
-import java.io.Serializable;
+import com.example.etapa1DAC.domain.PurchaseItem;
 
-public record PurchaseConfirmationEvent(String emailAddress, String userName, String eventName, String ticketType, Integer quantity, double totalPrice) implements Serializable {
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Set;
+
+public record PurchaseConfirmationEvent(String emailAddress, String userName, BigDecimal totalPrice) implements Serializable {
 }

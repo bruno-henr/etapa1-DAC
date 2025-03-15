@@ -21,6 +21,4 @@ public class AmqpConfig {
     public ApplicationListener<ApplicationReadyEvent> applicationReadyEventApplicationListener(RabbitAdmin rabbitAdmin) {
         return event -> rabbitAdmin.initialize();
     }
-
-
 }

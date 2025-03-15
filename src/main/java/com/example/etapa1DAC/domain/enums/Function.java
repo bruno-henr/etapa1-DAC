@@ -1,4 +1,4 @@
-package com.example.etapa1DAC.domain;
+package com.example.etapa1DAC.domain.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
