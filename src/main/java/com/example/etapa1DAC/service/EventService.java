@@ -43,8 +43,6 @@ public class EventService {
     @Autowired
     AuthenticatedUserService authenticatedUserService;
     @Autowired
-    EmailService emailService;
-    @Autowired
     EventDateValidate eventDateValidate;
     @Autowired
     PurchaseItemRepository purchaseItemRepository;
