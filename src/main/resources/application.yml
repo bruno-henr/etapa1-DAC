@@ -4,7 +4,7 @@ spring:
 
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/dac
+    url: jdbc:postgresql://localhost:5434/dac
     username: dac
     password: dac
     driver-class-name: org.postgresql.Driver

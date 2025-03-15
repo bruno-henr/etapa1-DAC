@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   app:
@@ -6,17 +6,18 @@ services:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      - postgres
-      - rabbitmq
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     ports:
       - "8080:8080"
     networks:
       - dac-network
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5434/dac
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/dac
       SPRING_DATASOURCE_USERNAME: dac
       SPRING_DATASOURCE_PASSWORD: dac
-      POSTGRES_DB: dac
       SPRING_JPA_HIBERNATE_DDL_AUTO: create
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
@@ -34,21 +35,31 @@ services:
     networks:
       - dac-network
     ports:
-      - "5434:5434"
+      - "5434:5432"
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dac -d dac"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
     ports:
-      - "5672:5672"   # Porta usada pela aplicação
-      - "15672:15672" # Interface Web do RabbitMQ
+      - "5672:5672"
+      - "15672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
     networks:
       - dac-network
     restart: always
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   dac-network:
