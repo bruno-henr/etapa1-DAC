@@ -2,6 +2,7 @@ spring:
   application:
     name: etapa1DAC
 
+
   datasource:
     url: jdbc:postgresql://localhost:5434/dac
     username: dac
@@ -14,7 +15,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -35,18 +36,7 @@ spring:
           connectiontimeout: 50000
           timeout: 50000
           writetimeout: 50000
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-    exchange: ticketExchange
-    queues:
-      ticket-generation: ticketGenerationQueue
-      email-notification: email-notification-request-queue
-    routing-keys:
-      generate-ticket: generate_ticket
-      send-email: email-notification-request
+
 
 logging:
   level:
@@ -59,3 +49,5 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
+
+

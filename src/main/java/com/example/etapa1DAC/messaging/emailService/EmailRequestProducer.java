@@ -36,7 +36,7 @@ public class EmailRequestProducer {
         );
         rabbitTemplate.convertAndSend(
                 "ticketExchange",
-                "email-notification-request",
+                "send_email",
                 event
         );
     }
