@@ -9,13 +9,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class TicketEventPublisher {
 
-    @Autowired
-    RabbitTemplate rabbitTemplate;
+    private final RabbitTemplate rabbitTemplate;
 
     @Autowired
-    Jackson2JsonMessageConverter jsonMessageConverter;
+    public TicketEventPublisher(RabbitTemplate rabbitTemplate) {
+        this.rabbitTemplate = rabbitTemplate;
+        // Ensure that RabbitTemplate uses JSON serialization
+        this.rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
+    }
 
     public void publishTicketPurchased(TicketPublisherEvent event) {
-        rabbitTemplate.convertAndSend("ticket.exchange", "ticket.purchased", event);
+        rabbitTemplate.convertAndSend("ticketExchange", "generate_ticket", event);
     }
 }
