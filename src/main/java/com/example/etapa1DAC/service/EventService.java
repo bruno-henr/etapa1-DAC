@@ -9,6 +9,7 @@ import com.example.etapa1DAC.domain.*;
 import com.example.etapa1DAC.domain.enums.PurchaseStatus;
 import com.example.etapa1DAC.exceptions.EventDateConflictException;
 import com.example.etapa1DAC.mapper.*;
+import com.example.etapa1DAC.messaging.emailService.EmailRequestProducer;
 import com.example.etapa1DAC.repository.*;
 import com.example.etapa1DAC.service.search.FindEvent;
 import com.example.etapa1DAC.service.validate.EventDateValidate;
@@ -42,8 +43,6 @@ public class EventService {
     @Autowired
     AuthenticatedUserService authenticatedUserService;
     @Autowired
-    EmailService emailService;
-    @Autowired
     EventDateValidate eventDateValidate;
     @Autowired
     PurchaseItemRepository purchaseItemRepository;
@@ -61,6 +60,8 @@ public class EventService {
     TicketMapper ticketMapper;
     @Autowired
     TicketEventPublisher ticketEventPublisher;
+    @Autowired
+    EmailRequestProducer emailRequestProducer;
 
     @Transactional
     public Event createEvent(CreateEventRequest newEvent) {
@@ -218,7 +219,8 @@ public class EventService {
         purchase.setStatus(PurchaseStatus.APPROVED);
         purchaseRepository.save(purchase);
 
-        emailService.sendPurchaseConfirmation(authenticatedUser, purchase.getItems(), totalPrice);
+        //emailService.sendPurchaseConfirmation(authenticatedUser, purchase.getItems(), totalPrice);
+        emailRequestProducer.sendPurchaseConfirmationEmail(authenticatedUser, purchase.getItems(), totalPrice);
 
         TicketPublisherEvent event = new TicketPublisherEvent(purchase.getId(), authenticatedUser.getId(), totalPrice, ticketItems, eventId);
         ticketEventPublisher.publishTicketPurchased(event);

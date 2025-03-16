@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
@@ -15,7 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Builder
-public class TicketField {
+public class TicketField implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

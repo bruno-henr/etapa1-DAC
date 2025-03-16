@@ -3,6 +3,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Set;
 import java.util.UUID;
@@ -14,7 +15,7 @@ import java.util.UUID;
 @Builder
 @ToString(exclude = {"purchase"})
 @EqualsAndHashCode(exclude = {"purchase"})
-public class PurchaseItem {
+public class PurchaseItem  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

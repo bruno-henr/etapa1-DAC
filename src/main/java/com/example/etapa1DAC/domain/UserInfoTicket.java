@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 @Data
@@ -13,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Builder
-public class UserInfoTicket {
+public class UserInfoTicket implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
